@@ -6,28 +6,28 @@
 
 // Data
 const account1 = {
-  owner: 'Jonas Schmedtmann',
+  owner: 'Esther Asare',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
 };
 
 const account2 = {
-  owner: 'Jessica Davis',
+  owner: 'Kojo Quansah',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
 };
 
 const account3 = {
-  owner: 'Steven Thomas Williams',
+  owner: 'Frank Quansah',
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
 };
 
 const account4 = {
-  owner: 'Sarah Smith',
+  owner: 'Hannah Assumang',
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
@@ -74,3 +74,34 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+
+//function to display movements
+const displayMovement = (movementsArr)=>{
+    //clear initial html content
+    containerMovements.innerHTML='';
+
+    //get data from array using foreach to run individual rows
+    movementsArr.forEach((movement, index)=>{
+        const movementType = movement > 0 ? 'deposit' : 'withdrawal';
+        const htmlRow = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${movementType}">${index + 1} ${movementType}</div>
+        <div class="movements__date"></div>
+        <div class="movements__value">${movement}</div>
+      </div>
+        `;
+        containerMovements.insertAdjacentHTML("afterbegin", htmlRow)
+    })
+}
+
+const createUsername = (accountsArr)=>{
+    accountsArr.forEach((account)=>{
+    // split creats the full name into array then map changes all array initials 'at' get the first letter of the words and join changes it to string
+    account.username = account.owner.toLowerCase().split(' ').map(name => name.at(0)).join('');
+})
+}
+
+createUsername(accounts);
+displayMovement(account1.movements);
+console.log(accounts)
+
