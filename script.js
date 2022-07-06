@@ -76,17 +76,17 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 
 //function to display movements
-const displayMovement = (movements)=>{
+const displayMovement = (movementsArr)=>{
     //clear initial html content
     containerMovements.innerHTML='';
 
     //get data from array using foreach to run individual rows
-    movements.forEach((movement, index)=>{
+    movementsArr.forEach((movement, index)=>{
         const movementType = movement > 0 ? 'deposit' : 'withdrawal';
         const htmlRow = `
       <div class="movements__row">
         <div class="movements__type movements__type--${movementType}">${index + 1} ${movementType}</div>
-        <div class="movements__date">3 days ago</div>
+        <div class="movements__date"></div>
         <div class="movements__value">${movement}</div>
       </div>
         `;
@@ -94,5 +94,14 @@ const displayMovement = (movements)=>{
     })
 }
 
+const createUsername = (accountsArr)=>{
+    accountsArr.forEach((account)=>{
+    // split creats the full name into array then map changes all array initials 'at' get the first letter of the words and join changes it to string
+    account.username = account.owner.toLowerCase().split(' ').map(name => name.at(0)).join('');
+})
+}
+
+createUsername(accounts);
 displayMovement(account1.movements);
+console.log(accounts)
 
