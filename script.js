@@ -74,6 +74,7 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+//FUNCTIONS
 
 //function to display movements
 const displayMovement = (movementsArr)=>{
@@ -101,7 +102,23 @@ const createUsername = (accountsArr)=>{
 })
 }
 
-createUsername(accounts);
+const calculateBalance = (movementArr)=>{
+ return `${movementArr.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0)} EUR`;
+}
+
+//createUsername(accounts);
+
+
+///////////////////////
+// USE OF THE FUNCTIONS
+//////////////////////
+
+//DISPLAY ACCOUNTS
 displayMovement(account1.movements);
+
+//DISPLAY TOTAL BALANCE
+labelBalance.textContent = calculateBalance(account1.movements);
+
+
 console.log(accounts)
 
