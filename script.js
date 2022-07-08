@@ -105,19 +105,28 @@ const createUsername = (accountsArr)=>{
 }
 
 const calculateBalance = (movementArr)=>{
- return `${movementArr.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0)} €`;
+ const totalBalance = movementArr.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
+ return labelBalance.textContent = `${totalBalance} €`;
 }
 
 const calcTotalDeposits = (movementArr) => {
-    return `${movementArr.filter((amount)=> amount > 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0)}€`
+     const totalDeposit = movementArr.filter((amount)=> amount > 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0);
+     return  labelSumIn.textContent = `${totalDeposit} €`;
 }
 
 const calcTotalWithdraw = (movementArr) => {
-    return `${Math.abs(movementArr.filter((amount)=> amount < 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0))}€`
+       const totalWithdraw =  Math.abs(movementArr.filter((amount)=> amount < 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0));
+       return labelSumOut.textContent = `${totalWithdraw} €`;
 }
 
-const clearInputs = (InputArray)=>{
-InputArray.map((input)=> input.value = '');
+const clearInputs = (InputArr)=>{
+    InputArr.map((input)=> input.value = '');
+}
+
+const transferMoney = (transferAmount, recipientUsername)=>{
+ const receiptAcc = accounts.find((account)=> account.username === recipientUsername);
+ receiptAcc.movements?.push(Number(transferAmount));
+ currentAccount.movements?.push(Number(-transferAmount));
 }
 
 
@@ -158,14 +167,15 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
     displayMovement(currentAccount.movements);
 
     //display totalBalance
-    labelBalance.textContent = calculateBalance(currentAccount.movements);
+    calculateBalance(currentAccount.movements);
 
     //display totalWithdrawal
-    labelSumIn.textContent= calcTotalDeposits(currentAccount.movements);
+    calcTotalDeposits(currentAccount.movements);
 
     //display totalDeposit
-    labelSumOut.textContent = calcTotalWithdraw(account1.movements);
-
+    calcTotalWithdraw(currentAccount.movements);
+     
+    console.log(currentAccount.movements);
 }else{
     labelWelcome.textContent = `Sorry Wrong Credentials!`; 
     labelWelcome.style.color = '#ff3333';
@@ -174,5 +184,22 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
 
 })
 
+
+btnTransfer.addEventListener('click', (e)=>{
+    e.preventDefault();
+    transferMoney(inputTransferAmount.value, inputTransferTo.value);
+    displayMovement(currentAccount.movements);
+
+    // redisplay totalBalance
+    calculateBalance(currentAccount.movements);
+
+    //display totalWithdrawal
+    calcTotalDeposits(currentAccount.movements);
+
+    //display totalDeposit
+    calcTotalWithdraw(currentAccount.movements);
+
+    console.log(currentAccount.movements);
+})
 //console.log(accounts)
 
