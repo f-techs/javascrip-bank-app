@@ -88,13 +88,15 @@ const displayMovement = (movementsArr)=>{
       <div class="movements__row">
         <div class="movements__type movements__type--${movementType}">${index + 1} ${movementType}</div>
         <div class="movements__date"></div>
-        <div class="movements__value">${movement}</div>
+        <div class="movements__value">${movement}€</div>
       </div>
         `;
-        containerMovements.insertAdjacentHTML("afterbegin", htmlRow)
+        containerMovements.insertAdjacentHTML("afterbegin", htmlRow);
     })
 }
 
+
+// add username to accounts
 const createUsername = (accountsArr)=>{
     accountsArr.forEach((account)=>{
     // split creats the full name into array then map changes all array initials 'at' get the first letter of the words and join changes it to string
@@ -103,18 +105,23 @@ const createUsername = (accountsArr)=>{
 }
 
 const calculateBalance = (movementArr)=>{
- return `${movementArr.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0)} EUR`;
+ return `${movementArr.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0)} €`;
 }
 
 const calcTotalDeposits = (movementArr) => {
-    return `${movementArr.filter((amount)=> amount > 0)
-                      .reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0)}€`
+    return `${movementArr.filter((amount)=> amount > 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0)}€`
 }
 
 const calcTotalWithdraw = (movementArr) => {
-    return `${Math.abs(movementArr.filter((amount)=> amount < 0)
-                      .reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0))}€`
-    }
+    return `${Math.abs(movementArr.filter((amount)=> amount < 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0))}€`
+}
+
+const clearInputs = (InputArray)=>{
+InputArray.map((input)=> input.value = '');
+}
+
+
+
 
 
 
@@ -125,16 +132,47 @@ const calcTotalWithdraw = (movementArr) => {
 // USE OF THE FUNCTIONS
 //////////////////////
 
-//DISPLAY ACCOUNTS
-displayMovement(account1.movements);
-
-//DISPLAY TOTAL BALANCE
-labelBalance.textContent = calculateBalance(account1.movements);
-
-//display Total Deposit or TotalSumIn
-labelSumIn.textContent= calcTotalDeposits(account1.movements);
-labelSumOut.textContent = calcTotalWithdraw(account1.movements);
 
 
-console.log(accounts)
+
+//call function to add username to accounts
+createUsername(accounts);
+
+//Event Listeners
+let currentAccount;
+btnLogin.addEventListener('click', function(e){
+e.preventDefault();
+currentAccount = accounts.find((acc) => acc.username === inputLoginUsername.value);
+if(currentAccount?.pin === Number(inputLoginPin.value)){
+    //Display Welcome message
+     labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
+     labelWelcome.style.color = 'black';
+    //Display interface
+     containerApp.style.opacity = 100;
+    
+     //clearInputs
+     clearInputs([inputLoginUsername, inputLoginPin]);
+     inputLoginPin.blur();
+
+    //display transaction list
+    displayMovement(currentAccount.movements);
+
+    //display totalBalance
+    labelBalance.textContent = calculateBalance(currentAccount.movements);
+
+    //display totalWithdrawal
+    labelSumIn.textContent= calcTotalDeposits(currentAccount.movements);
+
+    //display totalDeposit
+    labelSumOut.textContent = calcTotalWithdraw(account1.movements);
+
+}else{
+    labelWelcome.textContent = `Sorry Wrong Credentials!`; 
+    labelWelcome.style.color = '#ff3333';
+}
+
+
+})
+
+//console.log(accounts)
 
