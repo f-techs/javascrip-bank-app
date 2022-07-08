@@ -130,6 +130,14 @@ const transferMoney = (transferAmount, recipientUsername)=>{
 }
 
 
+//function to calculate loan transfer
+const transferLoan = (loanAmount)=>{
+ const checkLoanAmount= currentAccount.movements.find((amount) => {
+    return amount > Number(loanAmount) * 0.1;
+    })
+    Boolean(checkLoanAmount) ? currentAccount.movements.push(Number(loanAmount)) : ''
+}
+
 
 
 
@@ -175,7 +183,7 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
     //display totalDeposit
     calcTotalWithdraw(currentAccount.movements);
      
-    console.log(currentAccount.movements);
+    //console.log(currentAccount.movements);
 }else{
     labelWelcome.textContent = `Sorry Wrong Credentials!`; 
     labelWelcome.style.color = '#ff3333';
@@ -199,7 +207,41 @@ btnTransfer.addEventListener('click', (e)=>{
     //display totalDeposit
     calcTotalWithdraw(currentAccount.movements);
 
-    console.log(currentAccount.movements);
+    //clear Text Boxes
+    clearInputs([inputTransferAmount, inputTransferTo]);
+})
+
+btnLoan.addEventListener('click', (e)=>{
+    e.preventDefault();
+
+    //call Loan transfer function
+    transferLoan(inputLoanAmount.value);
+
+    displayMovement(currentAccount.movements);
+
+    // redisplay totalBalance
+    calculateBalance(currentAccount.movements);
+
+    //display totalWithdrawal
+    calcTotalDeposits(currentAccount.movements);
+
+    //display totalDeposit
+    calcTotalWithdraw(currentAccount.movements);
+
+    //clear Text Boxes
+    clearInputs([inputTransferAmount, inputTransferTo]);
+
+    // redisplay totalBalance
+    calculateBalance(currentAccount.movements);
+
+    //display totalWithdrawal
+    calcTotalDeposits(currentAccount.movements);
+
+    //display totalDeposit
+    calcTotalWithdraw(currentAccount.movements);
+
+    //clear Text Boxes
+    clearInputs([inputLoanAmount]);
 })
 //console.log(accounts)
 
