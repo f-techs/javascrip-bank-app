@@ -111,6 +111,11 @@ const calcTotalDeposits = (movementArr) => {
                       .reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0)}€`
 }
 
+const calcTotalWithdraw = (movementArr) => {
+    return `${Math.abs(movementArr.filter((amount)=> amount < 0)
+                      .reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0))}€`
+    }
+
 
 
 //createUsername(accounts);
@@ -128,6 +133,7 @@ labelBalance.textContent = calculateBalance(account1.movements);
 
 //display Total Deposit or TotalSumIn
 labelSumIn.textContent= calcTotalDeposits(account1.movements);
+labelSumOut.textContent = calcTotalWithdraw(account1.movements);
 
 
 console.log(accounts)
