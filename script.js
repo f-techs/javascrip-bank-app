@@ -60,7 +60,7 @@ const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
-
+const transferError = document.querySelector('.transfer__error');
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -105,8 +105,8 @@ const createUsername = (accountsArr)=>{
 }
 
 const calculateBalance = (account)=>{
- account.balance = account.movement.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
- return labelBalance.textContent = `${totalBalance} €`;
+ account.balance = account.movements.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
+ return labelBalance.textContent = `${account.balance} €`;
 }
 
 const calcTotalDeposits = (movementArr) => {
@@ -124,9 +124,16 @@ const clearInputs = (InputArr)=>{
 }
 
 const transferMoney = (transferAmount, recipientUsername)=>{
+    transferError.style.display='none';
  const receiptAcc = accounts.find((account)=> account.username === recipientUsername);
- receiptAcc.movements?.push(Number(transferAmount));
- currentAccount.movements?.push(Number(-transferAmount));
+ if(receiptAcc && transferAmount > 0 && transferAmount < currentAccount.balance && recipientUsername !== currentAccount.username){
+    receiptAcc.movements?.push(Number(transferAmount));
+    currentAccount.movements?.push(Number(-transferAmount));
+ }else{
+    transferError.textContent='Transfer error. Check amount and username well';
+    transferError.style.display='block';
+ }
+
 }
 
 
@@ -139,12 +146,11 @@ const transferLoan = (loanAmount)=>{
 }
 
 const updateUI = (loggedInAccount)=>{
-
     //display transaction list
     displayMovement(loggedInAccount.movements);
 
     //display totalBalance
-    calculateBalance(loggedInAccount.movements);
+    calculateBalance(loggedInAccount);
 
     //display totalWithdrawal
     calcTotalDeposits(loggedInAccount.movements);
@@ -169,6 +175,7 @@ const updateUI = (loggedInAccount)=>{
 
 
 //call function to add username to accounts
+
 createUsername(accounts);
 
 //Event Listeners
@@ -180,8 +187,12 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
     //Display Welcome message
      labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
      labelWelcome.style.color = 'black';
+
     //Display interface
      containerApp.style.opacity = 100;
+
+     //update UI
+     updateUI(currentAccount);
     
      //clearInputs
      clearInputs([inputLoginUsername, inputLoginPin]);
@@ -200,17 +211,12 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
 
 btnTransfer.addEventListener('click', (e)=>{
     e.preventDefault();
+
+    //call transferMoney function
     transferMoney(inputTransferAmount.value, inputTransferTo.value);
-    displayMovement(currentAccount.movements);
 
-    // redisplay totalBalance
-    calculateBalance(currentAccount.movements);
-
-    //display totalWithdrawal
-    calcTotalDeposits(currentAccount.movements);
-
-    //display totalDeposit
-    calcTotalWithdraw(currentAccount.movements);
+    //update UI
+    updateUI(currentAccount);
 
     //clear Text Boxes
     clearInputs([inputTransferAmount, inputTransferTo]);
@@ -221,30 +227,8 @@ btnLoan.addEventListener('click', (e)=>{
 
     //call Loan transfer function
     transferLoan(inputLoanAmount.value);
-
-    displayMovement(currentAccount.movements);
-
-    // redisplay totalBalance
-    calculateBalance(currentAccount.movements);
-
-    //display totalWithdrawal
-    calcTotalDeposits(currentAccount.movements);
-
-    //display totalDeposit
-    calcTotalWithdraw(currentAccount.movements);
-
-    //clear Text Boxes
-    clearInputs([inputTransferAmount, inputTransferTo]);
-
-    // redisplay totalBalance
-    calculateBalance(currentAccount.movements);
-
-    //display totalWithdrawal
-    calcTotalDeposits(currentAccount.movements);
-
-    //display totalDeposit
-    calcTotalWithdraw(currentAccount.movements);
-
+     
+    updateUI(currentAccount);
     //clear Text Boxes
     clearInputs([inputLoanAmount]);
 })

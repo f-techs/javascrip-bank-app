@@ -295,3 +295,8 @@
   .timer {
     font-weight: 600;
   }
+  .transfer__error{
+    font-size: 10px;
+    color:red;
+    display: none;
+  }
