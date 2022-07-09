@@ -104,8 +104,8 @@ const createUsername = (accountsArr)=>{
 })
 }
 
-const calculateBalance = (movementArr)=>{
- const totalBalance = movementArr.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
+const calculateBalance = (account)=>{
+ account.balance = account.movement.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
  return labelBalance.textContent = `${totalBalance} €`;
 }
 
@@ -136,6 +136,22 @@ const transferLoan = (loanAmount)=>{
     return amount > Number(loanAmount) * 0.1;
     })
     Boolean(checkLoanAmount) ? currentAccount.movements.push(Number(loanAmount)) : ''
+}
+
+const updateUI = (loggedInAccount)=>{
+
+    //display transaction list
+    displayMovement(loggedInAccount.movements);
+
+    //display totalBalance
+    calculateBalance(loggedInAccount.movements);
+
+    //display totalWithdrawal
+    calcTotalDeposits(loggedInAccount.movements);
+
+    //display totalDeposit
+    calcTotalWithdraw(loggedInAccount.movements);
+
 }
 
 
@@ -171,17 +187,6 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
      clearInputs([inputLoginUsername, inputLoginPin]);
      inputLoginPin.blur();
 
-    //display transaction list
-    displayMovement(currentAccount.movements);
-
-    //display totalBalance
-    calculateBalance(currentAccount.movements);
-
-    //display totalWithdrawal
-    calcTotalDeposits(currentAccount.movements);
-
-    //display totalDeposit
-    calcTotalWithdraw(currentAccount.movements);
      
     //console.log(currentAccount.movements);
 }else{
