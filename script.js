@@ -95,6 +95,15 @@ const displayMovement = (movementsArr)=>{
     })
 }
 
+const createObject = (name, movements=[], interest=1, pin)=>{
+    return {
+        owner: name,
+        movements: movements,
+        interestRate: interest, // %
+        pin: pin,
+      };
+}
+
 
 // add username to accounts
 const createUsername = (accountsArr)=>{
@@ -164,6 +173,8 @@ const updateUI = (loggedInAccount)=>{
 
 
 
+
+
 //createUsername(accounts);
 
 
@@ -182,7 +193,8 @@ createUsername(accounts);
 let currentAccount;
 btnLogin.addEventListener('click', function(e){
 e.preventDefault();
-currentAccount = accounts.find((acc) => acc.username === inputLoginUsername.value);
+const username = inputLoginUsername.value.toLowerCase();
+currentAccount = accounts.find((acc) => acc.username === username);
 if(currentAccount?.pin === Number(inputLoginPin.value)){
     //Display Welcome message
      labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
@@ -234,3 +246,8 @@ btnLoan.addEventListener('click', (e)=>{
 })
 //console.log(accounts)
 
+// let newAccount;
+// newAccount=`account${accounts.length}`;
+// newAccount = createObject('Adjei Quansah', [200, 300], 1, 5555);
+// accounts.push(newAccount);
+// console.log(accounts);
