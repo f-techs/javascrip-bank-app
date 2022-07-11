@@ -78,12 +78,14 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //FUNCTIONS
 
 //function to display movements
-const displayMovement = (movementsArr)=>{
+const displayMovement = (movementsArr, sort = false)=>{
     //clear initial html content
     containerMovements.innerHTML='';
 
     //get data from array using foreach to run individual rows
-    movementsArr.forEach((movement, index)=>{
+
+    const amountMovementsSort = sort ? movementsArr.slice().sort((a,b)=> a-b ) : movementsArr;
+    amountMovementsSort.forEach((movement, index)=>{
         const movementType = movement > 0 ? 'deposit' : 'withdrawal';
         const htmlRow = `
       <div class="movements__row">
@@ -266,6 +268,13 @@ if(currentAccount.username === inputCloseUsername.value && currentAccount.pin ==
 }
 
 })
+// sort deposits and withdrawal
+let sorted = false;
+btnSort.addEventListener('click', ()=>{
+    displayMovement(currentAccount.movements, !sorted);
+    sorted = !sorted;
+})
+
 
 
 // let newAccount;
