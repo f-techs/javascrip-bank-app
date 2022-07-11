@@ -295,7 +295,7 @@
   .timer {
     font-weight: 600;
   }
-  .transfer__error{
+  .transfer__error, .loan__error{
     font-size: 10px;
     color:red;
     display: none;

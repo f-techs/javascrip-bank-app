@@ -61,6 +61,7 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 const transferError = document.querySelector('.transfer__error');
+const loanError = document.querySelector('.loan__error');
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -148,10 +149,16 @@ const transferMoney = (transferAmount, recipientUsername)=>{
 
 //function to calculate loan transfer
 const transferLoan = (loanAmount)=>{
- const checkLoanAmount= currentAccount.movements.find((amount) => {
-    return amount > Number(loanAmount) * 0.1;
-    })
-    Boolean(checkLoanAmount) ? currentAccount.movements.push(Number(loanAmount)) : ''
+    const Amount = Number(loanAmount);
+    if(Amount > 0 && currentAccount.movements.some(accountDeposit => accountDeposit >= Amount * 0.1)){
+    loanError.style.display='none';
+     loanError.textContent='';
+     currentAccount.movements.push(Amount);
+    }else{
+    Amount <= 0 ?  loanError.textContent=`Loan Amount can't be 0 or less than 0` : '';
+    !currentAccount.movements.some(accountDeposit => accountDeposit >= Amount * 0.1) ? loanError.textContent=`No deposit greater than 10% of Loan` : '';
+    loanError.style.display='block';
+    }
 }
 
 const updateUI = (loggedInAccount)=>{
@@ -245,6 +252,21 @@ btnLoan.addEventListener('click', (e)=>{
     clearInputs([inputLoanAmount]);
 })
 //console.log(accounts)
+
+btnClose.addEventListener('click', (e)=>{
+e.preventDefault();
+if(currentAccount.username === inputCloseUsername.value && currentAccount.pin === Number(inputClosePin.value)){
+    const delAccountIndex = accounts.findIndex((acc)=>{
+        return acc.username === currentAccount.username
+    });
+   accounts.splice(delAccountIndex, 1);
+   containerApp.style.opacity=0;
+}else{
+    clearInputs([inputCloseUsername, inputClosePin])
+}
+
+})
+
 
 // let newAccount;
 // newAccount=`account${accounts.length}`;
