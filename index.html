@@ -17,9 +17,27 @@
   <body>
     <!-- TOP NAVIGATION -->
     <nav>
-      <p class="welcome">Log in to get started</p>
+      <p class="welcome">BANKIST APP</p>
       <img src="logo.png" alt="Logo" class="logo" />
+      <!-- <form class="login">
+        <input
+          type="text"
+          placeholder="user"
+          class="login__input login__input--user"
+        />
+        <input
+          type="text"
+          placeholder="PIN"
+          maxlength="4"
+          class="login__input login__input--pin"
+        />
+        <button class="login__btn">&rarr;</button>
+      </form> -->
+    </nav>
+
+    <div class="login-box">
       <form class="login">
+        <label class="login-error">login Error Here</label>
         <input
           type="text"
           placeholder="user"
@@ -28,14 +46,14 @@
         <!-- In practice, use type="password" -->
         <input
           type="text"
-          placeholder="PIN"
+          placeholder="password"
           maxlength="4"
           class="login__input login__input--pin"
         />
-        <button class="login__btn">&rarr;</button>
+        <button class="login__btn">Login &rarr;</button>
+        <button class="register__btn">Register Account</button>
       </form>
-    </nav>
-
+    </div>
     <main class="app">
       <!-- BALANCE -->
       <div class="balance">
@@ -47,6 +65,9 @@
         </div>
         <p class="balance__value">0000€</p>
       </div>
+     
+      <!--LOGIN-->
+
 
       <!-- MOVEMENTS -->
       <div class="movements">

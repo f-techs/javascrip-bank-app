@@ -62,6 +62,7 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 const transferError = document.querySelector('.transfer__error');
 const loanError = document.querySelector('.loan__error');
+const loginError = document.querySelector('.login-error');
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -142,7 +143,10 @@ const transferMoney = (transferAmount, recipientUsername)=>{
     receiptAcc.movements?.push(Number(transferAmount));
     currentAccount.movements?.push(Number(-transferAmount));
  }else{
-    transferError.textContent='Transfer error. Check amount and username well';
+    !receiptAcc ? transferError.textContent='Receipient username not in the system':'';
+    transferAmount <=0 ? transferError.textContent=`Sorry you can't transfer less than 0 or 0 amount`:'';
+    currentAccount.balance > currentAccount.balance ? transferError.textContent=`Sorry you transfer amount can't be more than your balance` : '';
+    recipientUsername === currentAccount.username ? transferError.textContent=`You can't transfer to your own account` : '';
     transferError.style.display='block';
  }
 
@@ -207,7 +211,7 @@ currentAccount = accounts.find((acc) => acc.username === username);
 if(currentAccount?.pin === Number(inputLoginPin.value)){
     //Display Welcome message
      labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
-     labelWelcome.style.color = 'black';
+     labelWelcome.style.display='none';
 
     //Display interface
      containerApp.style.opacity = 100;
@@ -222,8 +226,8 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
      
     //console.log(currentAccount.movements);
 }else{
-    labelWelcome.textContent = `Sorry Wrong Credentials!`; 
-    labelWelcome.style.color = '#ff3333';
+    loginError.textContent = `Sorry Wrong Credentials!`; 
+    labelWelcome.style.display='block';
 }
 
 
@@ -263,6 +267,7 @@ if(currentAccount.username === inputCloseUsername.value && currentAccount.pin ==
     });
    accounts.splice(delAccountIndex, 1);
    containerApp.style.opacity=0;
+  //  labelWelcome.textContent=`Log in to get started`;
 }else{
     clearInputs([inputCloseUsername, inputClosePin])
 }
