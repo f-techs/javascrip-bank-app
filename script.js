@@ -66,10 +66,15 @@ const inputClosePin = document.querySelector('.form__input--pin');
 const transferError = document.querySelector('.transfer__error');
 const loanError = document.querySelector('.loan__error');
 const loginError = document.querySelector('.login-error');
+const registerError = document.querySelector('.register-error');
 const btnRegister = document.querySelector('.register__btn');
 const RegisterPage = document.querySelector('.register__box');
 const LoginPage = document.querySelector('.login__box');
 const btnRegisterUser = document.querySelector('.register__new__btn');
+const logOut = document.querySelector('.logout');
+const btnAbout = document.querySelector('.show-about-app');
+const aboutModal = document.querySelector('.about-app');
+const btnCloseModal = document.querySelector('.close-modal');
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -203,6 +208,14 @@ const updateUI = (loggedInAccount)=>{
 ///////////////////////
 // USE OF THE FUNCTIONS
 //////////////////////
+btnAbout.addEventListener('click', ()=>{
+  aboutModal.style.display='flex';
+})
+
+btnCloseModal.addEventListener('click', ()=>{
+  aboutModal.style.display='none';
+})
+
 btnRegister.addEventListener('click', (e)=>{
 e.preventDefault();
 RegisterPage.style.display = 'block';
@@ -222,7 +235,11 @@ console.log(accounts)
 RegisterPage.style.display='none';
 LoginPage.style.display='block';
 }else{
-
+inputNewUsername.value === '' ? inputNewUsername.classList.add('error-border') : '';
+inputUserPass.value === '' ? inputUserPass.classList.add('error-border') : '';
+inputUserPassConfirm.value === '' ? inputUserPassConfirm.classList.add('error-border') : '';
+pass !== passConfirm  ? registerError.textContent=`Password Mismatch`:'';
+registerError.style.display='block';
 }
 
 })

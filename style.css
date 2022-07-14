@@ -30,7 +30,7 @@
     padding: 0 2rem;
   }
   
-  .welcome {
+  .welcome, .logout {
     font-size: 1.9rem;
     font-weight: 500;
   }
@@ -64,7 +64,7 @@
   .register__box{
     padding:10px;
     width: 300px;
-    height: 300px;
+    height: 350px;
     position:absolute;
     z-index: 50;
     margin: auto;
@@ -368,4 +368,45 @@
     font-size: 15px;
     color:red;
     display: none;
+  }
+
+  .error-border{
+    border:1px solid red;
+  }
+
+  .about-app{
+    display: flex;
+    justify-content: space-between;
+    width: 800px;
+    height:300px;
+    color:#333;
+    padding: 30px;
+    font-size: 16px;
+    z-index: 100;
+    position:absolute;
+    left:0;
+    right:0;
+    margin:auto;
+    background: #bbb;
+    border-radius: 25px;
+  }
+  .about-text{
+    margin-top:30px;
+  }
+  .close-modal{
+    text-align: center;
+    width:200px;
+    background-color: red;
+    color:white;
+    height: 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    border-style: none;
+  }
+  .show-about-app{
+    color:#3B5913;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: bold;
   }
