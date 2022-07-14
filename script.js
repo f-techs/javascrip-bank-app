@@ -227,18 +227,23 @@ btnRegisterUser.addEventListener('click', (e)=>{
 e.preventDefault();
 const pass = Number(inputUserPass.value);
 const passConfirm = Number(inputUserPassConfirm.value);
-if(inputNewUsername.value !== '' && inputUserPass.value !== '' && inputUserPassConfirm.value !== '' && pass === passConfirm){
-const newAcc = createNewAccount(inputNewUsername.value,passConfirm, undefined, undefined);
+const checkUsername = accounts.some((acc)=>acc.username === inputNewUsername.value.toLowerCase().split(' ').map(name => name.at(0)).join(''));
+console.log(checkUsername);
+if(!checkUsername && inputNewUsername.value !== '' && inputUserPass.value !== '' && inputUserPassConfirm.value !== '' && pass === passConfirm){
+const newAcc = createNewAccount(inputNewUsername.value, passConfirm, undefined, undefined);
 accounts.push(newAcc);
 createUsername(accounts);
 console.log(accounts)
 RegisterPage.style.display='none';
 LoginPage.style.display='block';
+loginError.textContent='Successful. Login';
+loginError.style.color='green';
 }else{
 inputNewUsername.value === '' ? inputNewUsername.classList.add('error-border') : '';
 inputUserPass.value === '' ? inputUserPass.classList.add('error-border') : '';
 inputUserPassConfirm.value === '' ? inputUserPassConfirm.classList.add('error-border') : '';
 pass !== passConfirm  ? registerError.textContent=`Password Mismatch`:'';
+checkUsername ? registerError.textContent=`Username Exist`:'';
 registerError.style.display='block';
 }
 
@@ -276,7 +281,7 @@ if(currentAccount?.pin === Number(inputLoginPin.value) && inputLoginUsername.val
     //console.log(currentAccount.movements);
 }else{
     currentAccount ? loginError.textContent = `Wrong username!` : ''; 
-    currentAccount?.pin !==Number(inputLoginPin.value) ?  loginError.textContent = `Wrong Password!` : ''; 
+    currentAccount?.pin !== Number(inputLoginPin.value) ?  loginError.textContent = `Wrong Password!` : ''; 
     inputLoginUsername.value === '' || inputLoginPin.value === '' ? loginError.textContent = `All fields are required` : ''; 
     loginError.style.display='block';
 
