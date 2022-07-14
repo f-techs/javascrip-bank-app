@@ -59,10 +59,18 @@ const inputTransferTo = document.querySelector('.form__input--to');
 const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
+const inputNewUsername = document.querySelector('.login__input--username');
+const inputUserPass = document.querySelector('.set__input--pass');
+const inputUserPassConfirm = document.querySelector('.set__input--pass--confirm');
 const inputClosePin = document.querySelector('.form__input--pin');
 const transferError = document.querySelector('.transfer__error');
 const loanError = document.querySelector('.loan__error');
 const loginError = document.querySelector('.login-error');
+const btnRegister = document.querySelector('.register__btn');
+const RegisterPage = document.querySelector('.register__box');
+const LoginPage = document.querySelector('.login__box');
+const btnRegisterUser = document.querySelector('.register__new__btn');
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -99,12 +107,12 @@ const displayMovement = (movementsArr, sort = false)=>{
     })
 }
 
-const createObject = (name, movements=[], interest=1, pin)=>{
+const createNewAccount = (userName, userPassword, interest=1.5, movements=[200])=>{
     return {
-        owner: name,
+        owner: userName,
         movements: movements,
         interestRate: interest, // %
-        pin: pin,
+        pin: userPassword,
       };
 }
 
@@ -188,13 +196,36 @@ const updateUI = (loggedInAccount)=>{
 
 
 
+
 //createUsername(accounts);
 
 
 ///////////////////////
 // USE OF THE FUNCTIONS
 //////////////////////
+btnRegister.addEventListener('click', (e)=>{
+e.preventDefault();
+RegisterPage.style.display = 'block';
+LoginPage.style.display='none';
 
+})
+
+btnRegisterUser.addEventListener('click', (e)=>{
+e.preventDefault();
+const pass = Number(inputUserPass.value);
+const passConfirm = Number(inputUserPassConfirm.value);
+if(inputNewUsername.value !== '' && inputUserPass.value !== '' && inputUserPassConfirm.value !== '' && pass === passConfirm){
+const newAcc = createNewAccount(inputNewUsername.value,passConfirm, undefined, undefined);
+accounts.push(newAcc);
+createUsername(accounts);
+console.log(accounts)
+RegisterPage.style.display='none';
+LoginPage.style.display='block';
+}else{
+
+}
+
+})
 
 
 
@@ -208,10 +239,11 @@ btnLogin.addEventListener('click', function(e){
 e.preventDefault();
 const username = inputLoginUsername.value.toLowerCase();
 currentAccount = accounts.find((acc) => acc.username === username);
-if(currentAccount?.pin === Number(inputLoginPin.value)){
+if(currentAccount?.pin === Number(inputLoginPin.value) && inputLoginUsername.value !== '' && inputLoginPin.value !== ''){
     //Display Welcome message
      labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
-     labelWelcome.style.display='none';
+    //  labelWelcome.style.display='none';
+    LoginPage.style.display = 'none';
 
     //Display interface
      containerApp.style.opacity = 100;
@@ -226,8 +258,11 @@ if(currentAccount?.pin === Number(inputLoginPin.value)){
      
     //console.log(currentAccount.movements);
 }else{
-    loginError.textContent = `Sorry Wrong Credentials!`; 
-    labelWelcome.style.display='block';
+    currentAccount ? loginError.textContent = `Wrong username!` : ''; 
+    currentAccount?.pin !==Number(inputLoginPin.value) ?  loginError.textContent = `Wrong Password!` : ''; 
+    inputLoginUsername.value === '' || inputLoginPin.value === '' ? loginError.textContent = `All fields are required` : ''; 
+    loginError.style.display='block';
+
 }
 
 

@@ -35,23 +35,52 @@
       </form> -->
     </nav>
 
-    <div class="login-box">
+    <div class="login__box">
       <form class="login">
         <label class="login-error">login Error Here</label>
         <input
           type="text"
-          placeholder="user"
+          placeholder="username"
           class="login__input login__input--user"
         />
+        <br>
         <!-- In practice, use type="password" -->
         <input
-          type="text"
-          placeholder="password"
+          type="password"
+          placeholder="Password"
           maxlength="4"
           class="login__input login__input--pin"
         />
+        <br>
         <button class="login__btn">Login &rarr;</button>
         <button class="register__btn">Register Account</button>
+      </form>
+    </div>
+    <div class="register__box">
+      <form class="login">
+        <label class="register-error">Register Error Here</label>
+        <input
+          type="text"
+          placeholder="Full Name"
+          class="login__input login__input--username"
+        />
+        <br>
+        <!-- In practice, use type="password" -->
+        <input
+          type="password"
+          placeholder="4 Digits PIN"
+          maxlength="4"
+          class="login__input set__input--pass"
+        />
+        <br>
+        <input
+        type="password"
+        placeholder="Re-Enter PIN"
+        maxlength="4"
+        class="login__input set__input--pass--confirm"
+      />
+      <br>
+        <button class="register__new__btn">Register &rarr;</button>
       </form>
     </div>
     <main class="app">

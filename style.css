@@ -40,13 +40,15 @@
   }
   
   .login{
-    position:absolute;
+    /* position:absolute;
     left:18%;
+    text-align: center;*/
+    margin-top: 30px; 
+    display:block;
     text-align: center;
-    margin-top: 30px;
   }
     
-  .login-box {
+  .login__box{
     padding:10px;
     width: 300px;
     height: 300px;
@@ -57,11 +59,27 @@
     right:0;
     background-color: #C1C1C1; 
     border-radius: 15px;
+    transition: all 1s;
   }
-.login__input--user, .login__input--pin{
-    display: block;
+  .register__box{
+    padding:10px;
+    width: 300px;
+    height: 300px;
+    position:absolute;
+    z-index: 50;
+    margin: auto;
+    left:0;
+    right:0;
+    background-color: #C1C1C1; 
+    border-radius: 15px;
+    display: none;
+  }
+.login__input--user, .login__input--pin, .login__input--username, .set__input--pass--confirm, .set__input--pass{
+    /* display: block; */
     margin-bottom:15px;
 }
+
+
   
   .login__input {
     border: none;
@@ -77,6 +95,9 @@
     transition: all 0.3s;
   }
   
+  .login__input--username{
+ width:25rem;
+  }
   .login__input:focus {
     outline: none;
     border: 1px solid #ccc;
@@ -98,7 +119,7 @@
     border-radius: 25px;
   }
 
-  .register__btn{
+  .register__btn, .register__new__btn{
     border: none;
     background: #3B5913;
     font-size: 1.5rem;
@@ -109,18 +130,20 @@
     height: 35px;
     border-radius: 25px;
     margin-top:50px;
-    display: block;
+    /* display: block; */
   }
   
-
-
   .login__btn:hover,
   .login__btn:focus,
   .btn--sort:hover,
-  .btn--sort:focus {
+  .btn--sort:focus,
+  .register__btn:hover {
     outline: none;
     color: #777;
   }
+
+
+
   
   /* MAIN */
   .app {
@@ -341,7 +364,7 @@
     display: none;
   }
 
-  .login-error{
+  .login-error, .register-error{
     font-size: 15px;
     color:red;
     display: none;
