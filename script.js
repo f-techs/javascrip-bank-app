@@ -158,8 +158,8 @@ const transferMoney = (transferAmount, recipientUsername)=>{
  }else{
     !receiptAcc ? transferError.textContent='Receipient username not in the system':'';
     transferAmount <=0 ? transferError.textContent=`Sorry you can't transfer less than 0 or 0 amount`:'';
-    currentAccount.balance > currentAccount.balance ? transferError.textContent=`Sorry you transfer amount can't be more than your balance` : '';
-    recipientUsername === currentAccount.username ? transferError.textContent=`You can't transfer to your own account` : '';
+    transferAmount > currentAccount.balance ? transferError.textContent=`Sorry amount exceeds balance` : '';
+    recipientUsername.value === currentAccount.username ? transferError.textContent=`You can't transfer to your own account` : '';
     transferError.style.display='block';
  }
 
@@ -238,6 +238,7 @@ RegisterPage.style.display='none';
 LoginPage.style.display='block';
 loginError.textContent='Successful. Login';
 loginError.style.color='green';
+clearInputs([inputNewUsername, inputUserPassConfirm, inputUserPass]);
 }else{
 inputNewUsername.value === '' ? inputNewUsername.classList.add('error-border') : '';
 inputUserPass.value === '' ? inputUserPass.classList.add('error-border') : '';
@@ -322,8 +323,9 @@ if(currentAccount.username === inputCloseUsername.value && currentAccount.pin ==
     const delAccountIndex = accounts.findIndex((acc)=>{
         return acc.username === currentAccount.username
     });
-   accounts.splice(delAccountIndex, 1);
+   //accounts.splice(delAccountIndex, 1);
    containerApp.style.opacity=0;
+   LoginPage.style.display = 'block';
   //  labelWelcome.textContent=`Log in to get started`;
 }else{
     clearInputs([inputCloseUsername, inputClosePin])
