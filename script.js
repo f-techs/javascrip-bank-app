@@ -10,6 +10,18 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+  movementsDates: [
+    '2019-11-18T21:31:17.178Z',
+    '2019-12-23T07:42:02.383Z',
+    '2020-01-28T09:15:04.904Z',
+    '2020-04-01T10:17:24.185Z',
+    '2020-05-08T14:11:59.604Z',
+    '2020-05-27T17:01:17.194Z',
+    '2020-07-11T23:36:17.929Z',
+    '2020-07-12T10:51:36.790Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT', // de-DE
 };
 
 const account2 = {
@@ -17,6 +29,18 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
 const account3 = {
@@ -105,7 +129,7 @@ const displayMovement = (movementsArr, sort = false)=>{
       <div class="movements__row">
         <div class="movements__type movements__type--${movementType}">${index + 1} ${movementType}</div>
         <div class="movements__date"></div>
-        <div class="movements__value">${movement}€</div>
+        <div class="movements__value">${movement.toFixed(2)}€</div>
       </div>
         `;
         containerMovements.insertAdjacentHTML("afterbegin", htmlRow);
@@ -132,17 +156,17 @@ const createUsername = (accountsArr)=>{
 
 const calculateBalance = (account)=>{
  account.balance = account.movements.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
- return labelBalance.textContent = `${account.balance} €`;
+ return labelBalance.textContent = `${account.balance.toFixed(2)} €`;
 }
 
 const calcTotalDeposits = (movementArr) => {
      const totalDeposit = movementArr.filter((amount)=> amount > 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0);
-     return  labelSumIn.textContent = `${totalDeposit} €`;
+     return  labelSumIn.textContent = `${totalDeposit.toFixed(2)} €`;
 }
 
 const calcTotalWithdraw = (movementArr) => {
        const totalWithdraw =  Math.abs(movementArr.filter((amount)=> amount < 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0));
-       return labelSumOut.textContent = `${totalWithdraw} €`;
+       return labelSumOut.textContent = `${totalWithdraw.toFixed(2)} €`;
 }
 
 const clearInputs = (InputArr)=>{
@@ -153,8 +177,8 @@ const transferMoney = (transferAmount, recipientUsername)=>{
     transferError.style.display='none';
  const receiptAcc = accounts.find((account)=> account.username === recipientUsername);
  if(receiptAcc && transferAmount > 0 && transferAmount < currentAccount.balance && recipientUsername !== currentAccount.username){
-    receiptAcc.movements?.push(Number(transferAmount));
-    currentAccount.movements?.push(Number(-transferAmount));
+    receiptAcc.movements?.push(+(transferAmount));
+    currentAccount.movements?.push(+(-transferAmount));
  }else{
     !receiptAcc ? transferError.textContent='Receipient username not in the system':'';
     transferAmount <=0 ? transferError.textContent=`Sorry you can't transfer less than 0 or 0 amount`:'';
@@ -168,7 +192,7 @@ const transferMoney = (transferAmount, recipientUsername)=>{
 
 //function to calculate loan transfer
 const transferLoan = (loanAmount)=>{
-    const Amount = Number(loanAmount);
+    const Amount = +(loanAmount);
     if(Amount > 0 && currentAccount.movements.some(accountDeposit => accountDeposit >= Amount * 0.1)){
     loanError.style.display='none';
      loanError.textContent='';
@@ -225,8 +249,8 @@ LoginPage.style.display='none';
 
 btnRegisterUser.addEventListener('click', (e)=>{
 e.preventDefault();
-const pass = Number(inputUserPass.value);
-const passConfirm = Number(inputUserPassConfirm.value);
+const pass = +(inputUserPass.value);
+const passConfirm = +(inputUserPassConfirm.value);
 const checkUsername = accounts.some((acc)=>acc.username === inputNewUsername.value.toLowerCase().split(' ').map(name => name.at(0)).join(''));
 console.log(checkUsername);
 if(!checkUsername && inputNewUsername.value !== '' && inputUserPass.value !== '' && inputUserPassConfirm.value !== '' && pass === passConfirm){
@@ -262,7 +286,7 @@ btnLogin.addEventListener('click', function(e){
 e.preventDefault();
 const username = inputLoginUsername.value.toLowerCase();
 currentAccount = accounts.find((acc) => acc.username === username);
-if(currentAccount?.pin === Number(inputLoginPin.value) && inputLoginUsername.value !== '' && inputLoginPin.value !== ''){
+if(currentAccount?.pin === +(inputLoginPin.value) && inputLoginUsername.value !== '' && inputLoginPin.value !== ''){
     //Display Welcome message
      labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
     //  labelWelcome.style.display='none';
@@ -282,7 +306,7 @@ if(currentAccount?.pin === Number(inputLoginPin.value) && inputLoginUsername.val
     //console.log(currentAccount.movements);
 }else{
     currentAccount ? loginError.textContent = `Wrong username!` : ''; 
-    currentAccount?.pin !== Number(inputLoginPin.value) ?  loginError.textContent = `Wrong Password!` : ''; 
+    currentAccount?.pin !== +(inputLoginPin.value) ?  loginError.textContent = `Wrong Password!` : ''; 
     inputLoginUsername.value === '' || inputLoginPin.value === '' ? loginError.textContent = `All fields are required` : ''; 
     loginError.style.display='block';
 
@@ -319,7 +343,7 @@ btnLoan.addEventListener('click', (e)=>{
 
 btnClose.addEventListener('click', (e)=>{
 e.preventDefault();
-if(currentAccount.username === inputCloseUsername.value && currentAccount.pin === Number(inputClosePin.value)){
+if(currentAccount.username === inputCloseUsername.value && currentAccount.pin === +(inputClosePin.value)){
     const delAccountIndex = accounts.findIndex((acc)=>{
         return acc.username === currentAccount.username
     });
@@ -338,7 +362,6 @@ btnSort.addEventListener('click', ()=>{
     displayMovement(currentAccount.movements, !sorted);
     sorted = !sorted;
 })
-
 
 
 // let newAccount;
