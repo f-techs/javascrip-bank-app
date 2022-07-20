@@ -100,6 +100,7 @@ const btnAbout = document.querySelector('.show-about-app');
 const aboutModal = document.querySelector('.about-app');
 const btnCloseModal = document.querySelector('.close-modal');
 
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -116,19 +117,28 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //FUNCTIONS
 
 //function to display movements
-const displayMovement = (movementsArr, sort = false)=>{
+const displayMovement = (accounts, sort = false)=>{
     //clear initial html content
     containerMovements.innerHTML='';
 
     //get data from array using foreach to run individual rows
 
-    const amountMovementsSort = sort ? movementsArr.slice().sort((a,b)=> a-b ) : movementsArr;
+    const amountMovementsSort = sort ? accounts.movements.slice().sort((a,b)=> a-b ) : accounts.movements;
     amountMovementsSort.forEach((movement, index)=>{
+        const dates = new Date(accounts.movementsDates[index]);
+        const year = dates.getFullYear();
+        const month = `${dates.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
+        const date = `${dates.getDate()}`.padStart(2, 0);
+        const hours =   dates.getHours();
+        const minutes = `${dates.getMinutes()}`;
+        const movementDates=`${date}/${month}/${year}, ${hours} : ${minutes}`;
+
+
         const movementType = movement > 0 ? 'deposit' : 'withdrawal';
         const htmlRow = `
       <div class="movements__row">
         <div class="movements__type movements__type--${movementType}">${index + 1} ${movementType}</div>
-        <div class="movements__date"></div>
+        <div class="movements__date">${movementDates}</div>
         <div class="movements__value">${movement.toFixed(2)}€</div>
       </div>
         `;
@@ -179,6 +189,8 @@ const transferMoney = (transferAmount, recipientUsername)=>{
  if(receiptAcc && transferAmount > 0 && transferAmount < currentAccount.balance && recipientUsername !== currentAccount.username){
     receiptAcc.movements?.push(+(transferAmount));
     currentAccount.movements?.push(+(-transferAmount));
+    currentAccount.movementsDates?.push(new Date().toISOString());
+    receiptAcc.movementsDates?.push(new Date(),toISOString());
  }else{
     !receiptAcc ? transferError.textContent='Receipient username not in the system':'';
     transferAmount <=0 ? transferError.textContent=`Sorry you can't transfer less than 0 or 0 amount`:'';
@@ -194,9 +206,10 @@ const transferMoney = (transferAmount, recipientUsername)=>{
 const transferLoan = (loanAmount)=>{
     const Amount = +(loanAmount);
     if(Amount > 0 && currentAccount.movements.some(accountDeposit => accountDeposit >= Amount * 0.1)){
-    loanError.style.display='none';
+     loanError.style.display='none';
      loanError.textContent='';
      currentAccount.movements.push(Amount);
+     currentAccount.movementsDates.push(new Date().toISOString());
     }else{
     Amount <= 0 ?  loanError.textContent=`Loan Amount can't be 0 or less than 0` : '';
     !currentAccount.movements.some(accountDeposit => accountDeposit >= Amount * 0.1) ? loanError.textContent=`No deposit greater than 10% of Loan` : '';
@@ -206,7 +219,7 @@ const transferLoan = (loanAmount)=>{
 
 const updateUI = (loggedInAccount)=>{
     //display transaction list
-    displayMovement(loggedInAccount.movements);
+    displayMovement(loggedInAccount);
 
     //display totalBalance
     calculateBalance(loggedInAccount);
@@ -359,9 +372,26 @@ if(currentAccount.username === inputCloseUsername.value && currentAccount.pin ==
 // sort deposits and withdrawal
 let sorted = false;
 btnSort.addEventListener('click', ()=>{
-    displayMovement(currentAccount.movements, !sorted);
+    displayMovement(currentAccount, !sorted);
     sorted = !sorted;
+
+    const movementRows = document.querySelectorAll('.movements__row');
+    movementRows.forEach((row, index)=>{
+      (index % 2) === 0 ? row.style.backgroundColor = 'orange' : ' ';
+      console.log(row);
+    })
 })
+
+
+//set dates and format
+const now = new Date();
+const year = now.getFullYear();
+const month = `${now.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
+const date = `${now.getDate()}`.padStart(2, 0);
+const hours =   now.getHours();
+const minutes = `${now.getMinutes()}`;
+const ampm = `${now.get}`
+labelDate.textContent=`${date}/${month}/${year}, ${hours} : ${minutes}`;
 
 
 // let newAccount;
@@ -369,3 +399,6 @@ btnSort.addEventListener('click', ()=>{
 // newAccount = createObject('Adjei Quansah', [200, 300], 1, 5555);
 // accounts.push(newAccount);
 // console.log(accounts);
+
+//some additional styling
+
