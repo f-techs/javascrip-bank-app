@@ -14,8 +14,8 @@ const account1 = {
     '2019-11-18T21:31:17.178Z',
     '2019-12-23T07:42:02.383Z',
     '2020-01-28T09:15:04.904Z',
-    '2020-04-01T10:17:24.185Z',
-    '2020-05-08T14:11:59.604Z',
+    '2022-07-19T10:17:24.185Z',
+    '2022-07-04T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
     '2020-07-11T23:36:17.929Z',
     '2020-07-12T10:51:36.790Z',
@@ -122,18 +122,30 @@ const displayMovement = (accounts, sort = false)=>{
     containerMovements.innerHTML='';
 
     //get data from array using foreach to run individual rows
+   //function for date - some days ago
+   const calculateMovementDate = (mainDate)=>{
+   const calculateDays= (date1, date2) => Math.round(Math.abs(date1-date2)/(1000 * 60 * 60 * 24));
+    const daysAgo = calculateDays(new Date(), mainDate);
+    console.log(daysAgo);
+    if(daysAgo === 0) return 'Today';
+    if(daysAgo === 1) return 'Yesterday';
+    if(daysAgo <=7) return `${daysAgo} ago`;
+    else{
+      const month = `${mainDate.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
+      const date = `${mainDate.getDate()}`.padStart(2, 0);
+      const hours =   mainDate.getHours();
+      const minutes = `${mainDate.getMinutes()}`;
+      const year = mainDate.getFullYear();
+      return `${date}/${month}/${year}, ${hours} : ${minutes}`;
+    }
+
+   }
+
 
     const amountMovementsSort = sort ? accounts.movements.slice().sort((a,b)=> a-b ) : accounts.movements;
     amountMovementsSort.forEach((movement, index)=>{
-        const dates = new Date(accounts.movementsDates[index]);
-        const year = dates.getFullYear();
-        const month = `${dates.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
-        const date = `${dates.getDate()}`.padStart(2, 0);
-        const hours =   dates.getHours();
-        const minutes = `${dates.getMinutes()}`;
-        const movementDates=`${date}/${month}/${year}, ${hours} : ${minutes}`;
-
-
+        const trxDate = new Date(accounts.movementsDates[index]);
+        const movementDates = calculateMovementDate(trxDate);
         const movementType = movement > 0 ? 'deposit' : 'withdrawal';
         const htmlRow = `
       <div class="movements__row">
