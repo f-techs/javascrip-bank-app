@@ -120,6 +120,22 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 //FUNCTIONS
 
+const dateFormat = (dateToFormat)=>{
+return new Intl.DateTimeFormat('en-Gh',{
+      year:'numeric',
+      month:'long',
+      weekday:'long',
+      hour:'numeric',
+      minute:'numeric'
+}).format(dateToFormat);
+}
+const currencyFormat = (locale, currency, amount)=>{
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency
+  }).format(amount)
+}
+
 //function to display movements
 const displayMovement = (accounts, sort = false)=>{
     //clear initial html content
@@ -135,20 +151,12 @@ const displayMovement = (accounts, sort = false)=>{
     if(daysAgo === 1) return 'Yesterday';
     if(daysAgo <= 7) return `${daysAgo} days ago`;
     else{
-      const options={
-       year:'numeric',
-       month:'long',
-       weekday:'long',
-       hour:'numeric',
-       minute:'numeric',
-       day:'numeric'
-      }
       // const month = `${mainDate.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
       // const date = `${mainDate.getDate()}`.padStart(2, 0);
       // const hours =   mainDate.getHours();
       // const minutes = `${mainDate.getMinutes()}`;
       // const year = mainDate.getFullYear();
-      return new Intl.DateTimeFormat('en-GH', options).format(mainDate);
+      return dateFormat(mainDate);
     }
 
    }
@@ -163,7 +171,7 @@ const displayMovement = (accounts, sort = false)=>{
       <div class="movements__row">
         <div class="movements__type movements__type--${movementType}">${index + 1} ${movementType}</div>
         <div class="movements__date">${movementDates}</div>
-        <div class="movements__value">${new Intl.NumberFormat('en-Gh', currencyOptions).format(movement.toFixed(2))}</div>
+        <div class="movements__value">${currencyFormat('en-Gh', 'GHS', movement.toFixed(2))}</div>
       </div>
         `;
         containerMovements.insertAdjacentHTML("afterbegin", htmlRow);
@@ -190,17 +198,17 @@ const createUsername = (accountsArr)=>{
 
 const calculateBalance = (account)=>{
  account.balance = account.movements.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
- return labelBalance.textContent = `${new Intl.NumberFormat('en-Gh', currencyOptions).format(account.balance.toFixed(2))}`;
+ return labelBalance.textContent = `${currencyFormat('en-Gh', 'GHS', account.balance.toFixed(2))}`;
 }
 
 const calcTotalDeposits = (movementArr) => {
      const totalDeposit = movementArr.filter((amount)=> amount > 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0);
-     return  labelSumIn.textContent = `${new Intl.NumberFormat('en-Gh', currencyOptions).format(totalDeposit.toFixed(2))}`;
+     return  labelSumIn.textContent = `${currencyFormat('en-Gh', 'GHS', totalDeposit.toFixed(2))}`;
 }
 
 const calcTotalWithdraw = (movementArr) => {
        const totalWithdraw =  Math.abs(movementArr.filter((amount)=> amount < 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0));
-       return labelSumOut.textContent = `${new Intl.NumberFormat('en-Gh', currencyOptions).format(totalWithdraw.toFixed(2))} `;
+       return labelSumOut.textContent = `${currencyFormat('en-Gh', 'GHS', totalWithdraw.toFixed(2))} `;
 }
 
 const clearInputs = (InputArr)=>{
@@ -214,7 +222,7 @@ const transferMoney = (transferAmount, recipientUsername)=>{
     receiptAcc.movements?.push(+(transferAmount));
     currentAccount.movements?.push(+(-transferAmount));
     currentAccount.movementsDates?.push(new Date().toISOString());
-    receiptAcc.movementsDates?.push(new Date(),toISOString());
+    receiptAcc.movementsDates?.push(new Date().toISOString());
  }else{
     !receiptAcc ? transferError.textContent='Receipient username not in the system':'';
     transferAmount <=0 ? transferError.textContent=`Sorry you can't transfer less than 0 or 0 amount`:'';
