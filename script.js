@@ -99,6 +99,10 @@ const logOut = document.querySelector('.logout');
 const btnAbout = document.querySelector('.show-about-app');
 const aboutModal = document.querySelector('.about-app');
 const btnCloseModal = document.querySelector('.close-modal');
+const currencyOptions = {
+  style: 'currency',
+  currency: 'GHS'
+}
 
 
 /////////////////////////////////////////////////
@@ -126,17 +130,25 @@ const displayMovement = (accounts, sort = false)=>{
    const calculateMovementDate = (mainDate)=>{
    const calculateDays= (date1, date2) => Math.round(Math.abs(date1-date2)/(1000 * 60 * 60 * 24));
     const daysAgo = calculateDays(new Date(), mainDate);
-    console.log(daysAgo);
+    //console.log(daysAgo);
     if(daysAgo === 0) return 'Today';
     if(daysAgo === 1) return 'Yesterday';
-    if(daysAgo <=7) return `${daysAgo} ago`;
+    if(daysAgo <= 7) return `${daysAgo} days ago`;
     else{
-      const month = `${mainDate.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
-      const date = `${mainDate.getDate()}`.padStart(2, 0);
-      const hours =   mainDate.getHours();
-      const minutes = `${mainDate.getMinutes()}`;
-      const year = mainDate.getFullYear();
-      return `${date}/${month}/${year}, ${hours} : ${minutes}`;
+      const options={
+       year:'numeric',
+       month:'long',
+       weekday:'long',
+       hour:'numeric',
+       minute:'numeric',
+       day:'numeric'
+      }
+      // const month = `${mainDate.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
+      // const date = `${mainDate.getDate()}`.padStart(2, 0);
+      // const hours =   mainDate.getHours();
+      // const minutes = `${mainDate.getMinutes()}`;
+      // const year = mainDate.getFullYear();
+      return new Intl.DateTimeFormat('en-GH', options).format(mainDate);
     }
 
    }
@@ -151,7 +163,7 @@ const displayMovement = (accounts, sort = false)=>{
       <div class="movements__row">
         <div class="movements__type movements__type--${movementType}">${index + 1} ${movementType}</div>
         <div class="movements__date">${movementDates}</div>
-        <div class="movements__value">${movement.toFixed(2)}€</div>
+        <div class="movements__value">${new Intl.NumberFormat('en-Gh', currencyOptions).format(movement.toFixed(2))}</div>
       </div>
         `;
         containerMovements.insertAdjacentHTML("afterbegin", htmlRow);
@@ -178,17 +190,17 @@ const createUsername = (accountsArr)=>{
 
 const calculateBalance = (account)=>{
  account.balance = account.movements.reduce((totalAmount, amounts)=> totalAmount+=amounts, 0);
- return labelBalance.textContent = `${account.balance.toFixed(2)} €`;
+ return labelBalance.textContent = `${new Intl.NumberFormat('en-Gh', currencyOptions).format(account.balance.toFixed(2))}`;
 }
 
 const calcTotalDeposits = (movementArr) => {
      const totalDeposit = movementArr.filter((amount)=> amount > 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0);
-     return  labelSumIn.textContent = `${totalDeposit.toFixed(2)} €`;
+     return  labelSumIn.textContent = `${new Intl.NumberFormat('en-Gh', currencyOptions).format(totalDeposit.toFixed(2))}`;
 }
 
 const calcTotalWithdraw = (movementArr) => {
        const totalWithdraw =  Math.abs(movementArr.filter((amount)=> amount < 0).reduce((totalAmount, filteredAmounts)=>totalAmount+=filteredAmounts  , 0));
-       return labelSumOut.textContent = `${totalWithdraw.toFixed(2)} €`;
+       return labelSumOut.textContent = `${new Intl.NumberFormat('en-Gh', currencyOptions).format(totalWithdraw.toFixed(2))} `;
 }
 
 const clearInputs = (InputArr)=>{
@@ -397,13 +409,22 @@ btnSort.addEventListener('click', ()=>{
 
 //set dates and format
 const now = new Date();
-const year = now.getFullYear();
-const month = `${now.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
-const date = `${now.getDate()}`.padStart(2, 0);
-const hours =   now.getHours();
-const minutes = `${now.getMinutes()}`;
-const ampm = `${now.get}`
-labelDate.textContent=`${date}/${month}/${year}, ${hours} : ${minutes}`;
+// const year = now.getFullYear();
+// const month = `${now.getMonth() + 1}`.padStart(2, 0);  //plus 1 because it Jan is 0
+// const date = `${now.getDate()}`.padStart(2, 0);
+// const hours =   now.getHours();
+// const minutes = `${now.getMinutes()}`;
+// const ampm = `${now.get}`
+const options={
+  year:'numeric',
+  month:'long',
+  weekday:'long',
+  hour:'numeric',
+  minute:'numeric',
+  day:'numeric'
+ }
+ const locale =navigator.language;
+labelDate.textContent=new Intl.DateTimeFormat(locale, options).format(now);
 
 
 // let newAccount;
