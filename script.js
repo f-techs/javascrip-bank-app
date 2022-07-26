@@ -158,7 +158,6 @@ const displayMovement = (accounts, sort = false)=>{
       // const year = mainDate.getFullYear();
       return dateFormat(mainDate);
     }
-
    }
 
 
@@ -238,10 +237,10 @@ const transferMoney = (transferAmount, recipientUsername)=>{
 const transferLoan = (loanAmount)=>{
     const Amount = +(loanAmount);
     if(Amount > 0 && currentAccount.movements.some(accountDeposit => accountDeposit >= Amount * 0.1)){
-     loanError.style.display='none';
-     loanError.textContent='';
-     currentAccount.movements.push(Amount);
-     currentAccount.movementsDates.push(new Date().toISOString());
+      loanError.style.display='none';
+      loanError.textContent='';
+      currentAccount.movements.push(Amount);
+      currentAccount.movementsDates.push(new Date().toISOString());
     }else{
     Amount <= 0 ?  loanError.textContent=`Loan Amount can't be 0 or less than 0` : '';
     !currentAccount.movements.some(accountDeposit => accountDeposit >= Amount * 0.1) ? loanError.textContent=`No deposit greater than 10% of Loan` : '';
@@ -252,13 +251,10 @@ const transferLoan = (loanAmount)=>{
 const updateUI = (loggedInAccount)=>{
     //display transaction list
     displayMovement(loggedInAccount);
-
     //display totalBalance
     calculateBalance(loggedInAccount);
-
     //display totalWithdrawal
     calcTotalDeposits(loggedInAccount.movements);
-
     //display totalDeposit
     calcTotalWithdraw(loggedInAccount.movements);
 
@@ -345,7 +341,7 @@ if(currentAccount?.pin === +(inputLoginPin.value) && inputLoginUsername.value !=
   clearInputs([inputLoginUsername, inputLoginPin]);
   inputLoginPin.blur();
   }, 3000);
-btnLogin.textContent='Please Wait...';     
+  btnLogin.textContent='Please Wait...';     
 }else{
     currentAccount ? loginError.textContent = `Wrong username!` : ''; 
     currentAccount?.pin !== +(inputLoginPin.value) ?  loginError.textContent = `Wrong Password!` : ''; 
@@ -368,11 +364,17 @@ btnTransfer.addEventListener('click', (e)=>{
 btnLoan.addEventListener('click', (e)=>{
     e.preventDefault();
     //call Loan transfer function
-    transferLoan(inputLoanAmount.value); 
     //update interface
-    updateUI(currentAccount);
+    setTimeout(()=>{
+      transferLoan(inputLoanAmount.value); 
+      updateUI(currentAccount);
+      clearInputs([inputLoanAmount]);
+    }, 3000)
+    loanError.style.display = 'block';
+    loanError.textContent='Processing Loan. Please wait...';
+    loanError.style.color = 'green';
     //clear Text Boxes
-    clearInputs([inputLoanAmount]);
+  
 })
 //console.log(accounts)
 
