@@ -332,54 +332,44 @@ e.preventDefault();
 const username = inputLoginUsername.value.toLowerCase();
 currentAccount = accounts.find((acc) => acc.username === username);
 if(currentAccount?.pin === +(inputLoginPin.value) && inputLoginUsername.value !== '' && inputLoginPin.value !== ''){
-    //Display Welcome message
-     labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
-    //  labelWelcome.style.display='none';
-    LoginPage.style.display = 'none';
-
-    //Display interface
-     containerApp.style.opacity = 100;
-
-     //update UI
-     updateUI(currentAccount);
-    
-     //clearInputs
-     clearInputs([inputLoginUsername, inputLoginPin]);
-     inputLoginPin.blur();
-
-     
-    //console.log(currentAccount.movements);
+  setTimeout(()=>{
+ //Display Welcome message
+ labelWelcome.textContent = `Welcome, ${currentAccount?.owner.split(' ').at(0)}`;
+ //  labelWelcome.style.display='none';
+ LoginPage.style.display = 'none';
+ //Display interface
+  containerApp.style.opacity = 100;
+  //update UI
+  updateUI(currentAccount);
+  //clearInputs
+  clearInputs([inputLoginUsername, inputLoginPin]);
+  inputLoginPin.blur();
+  }, 3000);
+btnLogin.textContent='Please Wait...';     
 }else{
     currentAccount ? loginError.textContent = `Wrong username!` : ''; 
     currentAccount?.pin !== +(inputLoginPin.value) ?  loginError.textContent = `Wrong Password!` : ''; 
     inputLoginUsername.value === '' || inputLoginPin.value === '' ? loginError.textContent = `All fields are required` : ''; 
     loginError.style.display='block';
-
 }
-
-
 })
 
 
 btnTransfer.addEventListener('click', (e)=>{
     e.preventDefault();
-
     //call transferMoney function
     transferMoney(inputTransferAmount.value, inputTransferTo.value);
-
     //update UI
     updateUI(currentAccount);
-
     //clear Text Boxes
     clearInputs([inputTransferAmount, inputTransferTo]);
 })
 
 btnLoan.addEventListener('click', (e)=>{
     e.preventDefault();
-
     //call Loan transfer function
-    transferLoan(inputLoanAmount.value);
-     
+    transferLoan(inputLoanAmount.value); 
+    //update interface
     updateUI(currentAccount);
     //clear Text Boxes
     clearInputs([inputLoanAmount]);
@@ -399,14 +389,12 @@ if(currentAccount.username === inputCloseUsername.value && currentAccount.pin ==
 }else{
     clearInputs([inputCloseUsername, inputClosePin])
 }
-
 })
 // sort deposits and withdrawal
 let sorted = false;
 btnSort.addEventListener('click', ()=>{
     displayMovement(currentAccount, !sorted);
     sorted = !sorted;
-
     const movementRows = document.querySelectorAll('.movements__row');
     movementRows.forEach((row, index)=>{
       (index % 2) === 0 ? row.style.backgroundColor = 'orange' : ' ';
